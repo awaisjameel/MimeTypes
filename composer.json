@@ -1,24 +1,24 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "awaisjameel/mimetypes",
+    "description": "A service for fetching and resolving MIME types dynamically.",
     "keywords": [
-        ":vendor_name",
+        "AwaisJameel",
         "laravel",
-        ":package_slug"
+        "mimetypes"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/awaisjameel/mimetypes",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Awais Jameel",
+            "email": "awais.jameel@ymail.com",
             "role": "Developer"
         }
     ],
     "require": {
-        "php": "^8.4",
+        "php": ">=7.4",
         "spatie/laravel-package-tools": "^1.16",
-        "illuminate/contracts": "^10.0||^11.0"
+        "illuminate/contracts": "^8.0||^9.0||^10.0||^11.0"
     },
     "require-dev": {
         "laravel/pint": "^1.14",
@@ -35,13 +35,13 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src/",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
+            "AwaisJameel\\MimeTypes\\": "src/",
+            "AwaisJameel\\MimeTypes\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests/",
+            "AwaisJameel\\MimeTypes\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
@@ -63,10 +63,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "AwaisJameel\\MimeTypes\\MimeTypesServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "MimeTypes": "AwaisJameel\\MimeTypes\\Facades\\MimeTypes"
             }
         }
     },
