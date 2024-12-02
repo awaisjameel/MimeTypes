@@ -5,7 +5,9 @@
     "keywords": [
         "AwaisJameel",
         "laravel",
-        "mimetypes"
+        "mimetypes",
+        "mimetype-to-extension",
+        "extension-to-mimetype"
     ],
     "homepage": "https://github.com/awaisjameel/mimetypes",
     "license": "MIT",
