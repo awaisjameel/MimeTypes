@@ -1,6 +1,6 @@
 {
     "name": "awaisjameel/mimetypes",
-    "description": "A service for fetching and resolving MIME types dynamically.",
+    "description": "A Laravel package for dynamically fetching, caching, and resolving MIME types and file extensions using the latest Apache MIME types list. Perfect for file upload validation and content-type detection.",
     "version": "1.0.0",
     "keywords": [
         "AwaisJameel",
