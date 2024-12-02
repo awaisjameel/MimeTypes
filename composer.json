@@ -1,6 +1,7 @@
 {
     "name": "awaisjameel/mimetypes",
     "description": "A service for fetching and resolving MIME types dynamically.",
+    "version": "1.0.0",
     "keywords": [
         "AwaisJameel",
         "laravel",
