@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Http;
 class MimeTypes
 {
     protected const APACHE_MIME_TYPES_URL = 'http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types';
+
     protected const CACHE_KEY = 'mime_types';
 
     /**
@@ -77,7 +78,6 @@ class MimeTypes
             return $extensionToMime[$mimeOrExtension]; // Extension to MIME
         }
 
-        throw new Exception("Invalid MIME type or extension!");
-
+        throw new Exception('Invalid MIME type or extension!');
     }
 }
