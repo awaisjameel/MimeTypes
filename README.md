@@ -19,9 +19,9 @@ With built-in caching support and seamless integration into Laravel's ecosystem,
 * **Content-Type Detection** : Dynamically determine the appropriate MIME type for file downloads or API responses.
 * **Dynamic File Handling** : Manage and validate file operations based on the latest MIME standards.
 
-### Why Use MimeTypesService?
+### Why Use MimeTypes?
 
-Dealing with MIME types can be cumbersome when relying on outdated static mappings or manually maintaining lists. **MimeTypesService** automates the process, giving you:
+Dealing with MIME types can be cumbersome when relying on outdated static mappings or manually maintaining lists. **MimeTypes** automates the process, giving you:
 
 * Up-to-date MIME mappings.
 * Improved performance with caching.
