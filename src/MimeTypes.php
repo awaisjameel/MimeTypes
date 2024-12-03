@@ -50,7 +50,7 @@ class MimeTypes
 
             return $mimeTypes;
         } catch (Exception $e) {
-            throw new Exception('Unable to get MIME types list.');
+            throw $e;
         }
     }
 
@@ -61,23 +61,27 @@ class MimeTypes
      */
     public static function getExtensionOrMime(string $mimeOrExtension)
     {
-        $mimeTypesList = self::generateUpToDateMimeArray();
+        try {
+            $mimeTypesList = self::generateUpToDateMimeArray();
 
-        $extensionToMime = [];
-        foreach ($mimeTypesList as $mime => $extensions) {
-            foreach ($extensions as $ext) {
-                $extensionToMime[$ext] = $mime;
+            $extensionToMime = [];
+            foreach ($mimeTypesList as $mime => $extensions) {
+                foreach ($extensions as $ext) {
+                    $extensionToMime[$ext] = $mime;
+                }
             }
-        }
 
-        if (isset($mimeTypesList[$mimeOrExtension])) {
-            return $mimeTypesList[$mimeOrExtension][0]; // MIME to extension
-        }
+            if (isset($mimeTypesList[$mimeOrExtension])) {
+                return $mimeTypesList[$mimeOrExtension][0]; // MIME to extension
+            }
 
-        if (isset($extensionToMime[$mimeOrExtension])) {
-            return $extensionToMime[$mimeOrExtension]; // Extension to MIME
-        }
+            if (isset($extensionToMime[$mimeOrExtension])) {
+                return $extensionToMime[$mimeOrExtension]; // Extension to MIME
+            }
 
-        throw new Exception('Invalid MIME type or extension!');
+            throw new Exception('Invalid MIME type or extension!');
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 }
