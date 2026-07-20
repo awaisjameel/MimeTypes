@@ -1,7 +1,6 @@
 {
     "name": "awaisjameel/mimetypes",
     "description": "A Laravel package for dynamically fetching, caching, and resolving MIME types and file extensions using the latest Apache MIME types list. Perfect for file upload validation and content-type detection.",
-    "version": "1.0.0",
     "keywords": [
         "AwaisJameel",
         "laravel",
@@ -19,33 +18,31 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
+        "php": "^8.2",
         "spatie/laravel-package-tools": "^1.16",
-        "illuminate/contracts": "^8.0||^9.0||^10.0||^11.0"
+        "illuminate/contracts": "^10.0||^11.0||^12.0||^13.0"
     },
     "require-dev": {
-        "laravel/pint": "^1.14",
+        "laravel/pint": "^1.18",
         "nunomaduro/collision": "^8.1.1||^7.10.0",
-        "larastan/larastan": "^2.9",
-        "orchestra/testbench": "^9.0.0||^8.22.0",
+        "larastan/larastan": "^2.9||^3.0",
+        "orchestra/testbench": "^8.22.0||^9.0||^10.0||^11.0",
         "pestphp/pest": "^3.0",
         "pestphp/pest-plugin-arch": "^3.0",
         "pestphp/pest-plugin-laravel": "^3.0",
         "phpstan/extension-installer": "^1.3",
-        "phpstan/phpstan-deprecation-rules": "^1.1",
-        "phpstan/phpstan-phpunit": "^1.3",
+        "phpstan/phpstan-deprecation-rules": "^1.1||^2.0",
+        "phpstan/phpstan-phpunit": "^1.3||^2.0",
         "spatie/laravel-ray": "^1.35"
     },
     "autoload": {
         "psr-4": {
-            "AwaisJameel\\MimeTypes\\": "src/",
-            "AwaisJameel\\MimeTypes\\Database\\Factories\\": "database/factories/"
+            "AwaisJameel\\MimeTypes\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "AwaisJameel\\MimeTypes\\Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/"
+            "AwaisJameel\\MimeTypes\\Tests\\": "tests/"
         }
     },
     "scripts": {
