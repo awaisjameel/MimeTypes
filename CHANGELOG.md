@@ -2,6 +2,26 @@
 
 All notable changes to `MimeTypes` will be documented in this file.
 
+## 3.0.0 - 2026-10-26
+
+- Enforce Pint, PHPStan, strict manifest validation and dependency audits on pull requests and pushes; consolidate duplicate/automatic-formatting workflows.
+
+### Changed
+
+- **Breaking:** require maintained Laravel 12 or 13; PHP 8.2 remains the minimum.
+- Update dependency support to current stable releases, including Pest 5 on PHP 8.4+.
+- Declare the Illuminate cache, HTTP, and support components and Guzzle used at runtime.
+- Remove unused Ray, Laravel Pest plugin, and PHPUnit-specific PHPStan extension;
+  rely on Pest's own architecture plugin and console dependencies.
+- Test supported PHP 8.2–8.5 / Laravel 12–13 combinations in CI.
+
+### Fixed
+
+- Reject empty or malformed successful HTTP responses and use the configured fallback.
+- Parse indented and inline comments without creating invalid MIME mappings.
+- Add regression coverage for fallback, connection errors, cache reuse, and cache TTL.
+- Exclude installed dependencies and local test artifacts from release archives.
+
 ## 2.0.0 - 2026-07-20
 
 ### Added

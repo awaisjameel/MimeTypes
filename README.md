@@ -2,7 +2,6 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/awaisjameel/mimetypes.svg?style=flat-square)](https://packagist.org/packages/awaisjameel/mimetypes)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/awaisjameel/mimetypes/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/awaisjameel/mimetypes/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/awaisjameel/mimetypes/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/awaisjameel/mimetypes/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/awaisjameel/mimetypes.svg?style=flat-square)](https://packagist.org/packages/awaisjameel/mimetypes)
 
 **MimeTypes** is a Laravel package for resolving MIME types and file extensions against the canonical [Apache `mime.types`](https://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types) list — the same public-domain dataset used by Apache HTTP Server, cURL, and countless other tools.
@@ -22,7 +21,11 @@ The list is fetched over HTTP, cached for as long as you like, and — unlike a 
 
 | MimeTypes | PHP  | Laravel          |
 |-----------|------|-------------------|
-| ^2.0      | ^8.2 | ^10.0, ^11.0, ^12.0, ^13.0 |
+| ^3.0      | ^8.2 | ^12.0, ^13.0 |
+
+Laravel 12 supports PHP 8.2–8.5; Laravel 13 requires PHP 8.3–8.5.
+Development installs select the latest compatible Pest version: Pest 3 on PHP 8.2,
+Pest 4 on PHP 8.3 or Laravel 12, and Pest 5 on PHP 8.4–8.5 with Laravel 13.
 
 ## Installation
 
@@ -205,6 +208,13 @@ Or with coverage:
 composer test-coverage
 ```
 
+## Upgrading from 2.x
+
+Version 3 requires Laravel 12 or 13. The public API and configuration keys are
+unchanged. Unusable successful HTTP responses now trigger the configured fallback
+or `UnableToFetchMimeTypesException`, just like failed HTTP requests. Comments are
+ignored when parsing MIME definitions.
+
 ## Upgrading from 1.x
 
 Version 2.0 is a from-the-ground-up rewrite. If you're upgrading from 1.x:
@@ -225,12 +235,12 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Security Vulnerabilities
 
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
+Please review [our security policy](https://github.com/awaisjameel/mimetypes/security/policy) on how to report security vulnerabilities.
 
 ## Credits
 
 - [Awais Jameel](https://github.com/awaisjameel)
-- [All Contributors](../../contributors)
+- [All Contributors](https://github.com/awaisjameel/mimetypes/graphs/contributors)
 
 ## License
 
