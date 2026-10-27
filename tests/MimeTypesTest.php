@@ -4,6 +4,7 @@ use AwaisJameel\MimeTypes\Exceptions\UnableToFetchMimeTypesException;
 use AwaisJameel\MimeTypes\Exceptions\UnknownMimeTypeOrExtensionException;
 use AwaisJameel\MimeTypes\Facades\MimeTypes;
 use AwaisJameel\MimeTypes\MimeTypes as MimeTypesService;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -143,4 +144,62 @@ it('can be resolved via constructor injection', function () {
     $mimeTypes = app(MimeTypesService::class);
 
     expect($mimeTypes->toExtension('text/html'))->toBe('html');
+});
+
+it('falls back when a successful response has no usable mappings', function (string $body) {
+    Http::fake(['*' => Http::response($body)]);
+
+    expect(MimeTypes::toMime('jpg'))->toBe('image/jpeg');
+})->with(['', '   ', '# comments only', '<html>Maintenance mode</html>', 'not-a-mime ext']);
+
+it('rejects malformed responses when fallback is disabled', function () {
+    config()->set('mimetypes.fallback_to_bundled_snapshot', false);
+    Http::fake(['*' => Http::response('<html>Maintenance mode</html>')]);
+
+    MimeTypes::all();
+})->throws(UnableToFetchMimeTypesException::class);
+
+it('parses comments and line endings without treating comments as extensions', function () {
+    Http::fake(['*' => Http::response("  # indented comment\r\nimage/jpeg JPG jpg jpeg # primary image\r\ntext/plain txt\r\n")]);
+
+    expect(MimeTypes::all())->toBe(['image/jpeg' => ['jpg', 'jpeg'], 'text/plain' => ['txt']])
+        ->and(MimeTypes::has('#'))->toBeFalse()
+        ->and(MimeTypes::toMime('jpg'))->toBe('image/jpeg');
+});
+
+it('reuses persistent cache in a new service instance', function () {
+    fakeMimeTypesSource();
+
+    (new MimeTypesService)->all();
+    (new MimeTypesService)->all();
+
+    Http::assertSentCount(1);
+});
+
+it('expires persistent cache according to the configured ttl', function () {
+    config()->set('mimetypes.ttl', 1);
+    fakeMimeTypesSource();
+
+    (new MimeTypesService)->all();
+    $this->travel(61)->seconds();
+    (new MimeTypesService)->all();
+
+    Http::assertSentCount(2);
+});
+
+it('falls back on connection errors and preserves the cause when fallback is disabled', function () {
+    Http::fake(fn () => throw new ConnectionException('Offline'));
+    config()->set('mimetypes.http.retry.times', 1);
+
+    expect((new MimeTypesService)->toMime('jpg'))->toBe('image/jpeg');
+
+    Cache::flush();
+    config()->set('mimetypes.fallback_to_bundled_snapshot', false);
+
+    try {
+        (new MimeTypesService)->all();
+        $this->fail('Expected a failed request to throw.');
+    } catch (UnableToFetchMimeTypesException $e) {
+        expect($e->getPrevious())->toBeInstanceOf(ConnectionException::class);
+    }
 });

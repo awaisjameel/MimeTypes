@@ -128,19 +128,19 @@ class MimeTypes
         return $this->resolved = $this->cacheStore()->remember(
             $this->cacheKey(),
             now()->addMinutes((int) config('mimetypes.ttl', 1440)),
-            fn () => $this->buildMaps($this->fetchMimeTypeLines()),
+            fn () => $this->fetchMimeTypeMaps(),
         );
     }
 
     /**
-     * Fetch the raw `mime type -> extensions` lines, falling back to the bundled
+     * Fetch and validate the MIME type maps, falling back to the bundled
      * snapshot when the origin cannot be reached and the fallback is enabled.
      *
-     * @return list<string>
+     * @return array{mimeToExtensions: array<string, list<string>>, extensionToMime: array<string, string>}
      *
      * @throws UnableToFetchMimeTypesException
      */
-    protected function fetchMimeTypeLines(): array
+    protected function fetchMimeTypeMaps(): array
     {
         $url = (string) config('mimetypes.url');
 
@@ -154,11 +154,17 @@ class MimeTypes
                 )
                 ->get($url);
 
-            if ($response->failed() || trim($response->body()) === '') {
+            if (! $response->successful()) {
                 throw UnableToFetchMimeTypesException::invalidResponse($url);
             }
 
-            return $this->splitLines($response->body());
+            $maps = $this->buildMaps($this->splitLines($response->body()));
+
+            if ($maps['mimeToExtensions'] === []) {
+                throw UnableToFetchMimeTypesException::invalidResponse($url);
+            }
+
+            return $maps;
         } catch (Throwable $e) {
             if (! config('mimetypes.fallback_to_bundled_snapshot', true)) {
                 throw $e instanceof UnableToFetchMimeTypesException
@@ -166,7 +172,13 @@ class MimeTypes
                     : UnableToFetchMimeTypesException::requestFailed($url, $e);
             }
 
-            return $this->splitLines($this->bundledSnapshot());
+            $maps = $this->buildMaps($this->splitLines($this->bundledSnapshot()));
+
+            if ($maps['mimeToExtensions'] === []) {
+                throw UnableToFetchMimeTypesException::invalidResponse($url);
+            }
+
+            return $maps;
         }
     }
 
@@ -198,7 +210,9 @@ class MimeTypes
         $extensionToMime = [];
 
         foreach ($lines as $line) {
-            if ($line === '' || $line[0] === '#' || ! preg_match_all('/(\S+)/', $line, $matches)) {
+            $line = trim(explode('#', $line, 2)[0]);
+
+            if ($line === '' || ! preg_match_all('/(\S+)/', $line, $matches)) {
                 continue;
             }
 
@@ -209,7 +223,19 @@ class MimeTypes
             }
 
             $mime = Str::lower($tokens[0]);
-            $extensions = array_slice($tokens, 1);
+
+            if (! preg_match('~^[a-z0-9!$&^_.+-]+/[a-z0-9!$&^_.+-]+$~', $mime)) {
+                continue;
+            }
+
+            $extensions = array_values(array_unique(array_filter(
+                array_map(Str::lower(...), array_slice($tokens, 1)),
+                fn (string $extension): bool => (bool) preg_match('/^[a-z0-9][a-z0-9._+-]*$/', $extension),
+            )));
+
+            if ($extensions === []) {
+                continue;
+            }
 
             $mimeToExtensions[$mime] = $extensions;
 
